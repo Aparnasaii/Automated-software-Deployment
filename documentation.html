@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Software Deployment System - Complete Documentation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #333; background: #f5f7fa; }
+
+        /* Navigation */
+        .sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background: #1a1a2e; color: #fff; overflow-y: auto; padding: 20px 0; z-index: 100; }
+        .sidebar h2 { padding: 10px 20px; font-size: 16px; color: #e94560; border-bottom: 1px solid #333; margin-bottom: 10px; }
+        .sidebar a { display: block; padding: 8px 20px; color: #ccc; text-decoration: none; font-size: 13px; border-left: 3px solid transparent; transition: all 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #16213e; color: #e94560; border-left-color: #e94560; }
+        .sidebar .sub { padding-left: 35px; font-size: 12px; }
+
+        /* Main Content */
+        .main { margin-left: 280px; padding: 30px 50px; max-width: 1100px; }
+        h1 { font-size: 32px; color: #1a1a2e; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 3px solid #e94560; }
+        h2 { font-size: 24px; color: #16213e; margin: 40px 0 15px; padding: 10px 0; border-bottom: 2px solid #e8e8e8; }
+        h3 { font-size: 18px; color: #e94560; margin: 25px 0 10px; }
+        h4 { font-size: 15px; color: #555; margin: 15px 0 8px; }
+        p { margin-bottom: 12px; }
+
+        /* Code Blocks */
+        pre { background: #1a1a2e; color: #a9dc76; padding: 18px; border-radius: 8px; overflow-x: auto; margin: 12px 0 20px; font-size: 13px; line-height: 1.5; }
+        code { font-family: 'Consolas', 'Courier New', monospace; }
+        .inline-code { background: #e8e8e8; padding: 2px 6px; border-radius: 3px; font-size: 13px; color: #e94560; }
+
+        /* Diagrams */
+        .diagram { background: #fff; border: 2px solid #e8e8e8; border-radius: 12px; padding: 30px; margin: 20px 0; text-align: center; overflow-x: auto; }
+        .diagram pre { background: #fff; color: #333; text-align: left; font-size: 12px; border: none; padding: 10px; }
+
+        /* Flow Diagram Styling */
+        .flow { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin: 20px 0; }
+        .flow-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; min-width: 120px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .flow-box.green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .flow-box.orange { background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%); color: #333; }
+        .flow-box.red { background: linear-gradient(135deg, #e94560 0%, #c0392b 100%); }
+        .flow-box.blue { background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%); }
+        .flow-arrow { font-size: 24px; color: #999; }
+
+        /* Cards */
+        .card { background: #fff; border-radius: 10px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-left: 4px solid #e94560; }
+        .card.info { border-left-color: #3498db; }
+        .card.success { border-left-color: #27ae60; }
+        .card.warning { border-left-color: #f39c12; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        th { background: #1a1a2e; color: #fff; padding: 12px 15px; text-align: left; font-size: 13px; }
+        td { padding: 10px 15px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+        tr:hover { background: #f8f9fa; }
+
+        /* Architecture Boxes */
+        .arch-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .arch-box { background: #fff; border-radius: 10px; padding: 18px; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.08); border-top: 4px solid #667eea; }
+        .arch-box h4 { color: #667eea; margin-bottom: 8px; }
+        .arch-box.phase1 { border-top-color: #e94560; }
+        .arch-box.phase1 h4 { color: #e94560; }
+        .arch-box.phase2 { border-top-color: #f39c12; }
+        .arch-box.phase2 h4 { color: #f39c12; }
+        .arch-box.phase3 { border-top-color: #27ae60; }
+        .arch-box.phase3 h4 { color: #27ae60; }
+        .arch-box.phase4 { border-top-color: #3498db; }
+        .arch-box.phase4 h4 { color: #3498db; }
+        .arch-box.phase5 { border-top-color: #9b59b6; }
+        .arch-box.phase5 h4 { color: #9b59b6; }
+
+        /* Step Numbers */
+        .step { display: flex; gap: 15px; margin: 20px 0; align-items: flex-start; }
+        .step-num { background: #e94560; color: #fff; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+        .step-content { flex: 1; }
+
+        /* File Tree */
+        .file-tree { background: #1a1a2e; color: #a9dc76; padding: 20px; border-radius: 8px; font-family: monospace; font-size: 13px; line-height: 1.8; }
+        .file-tree .folder { color: #78dce8; }
+        .file-tree .file { color: #a9dc76; }
+        .file-tree .config { color: #f39c12; }
+
+        /* Pipeline Visualization */
+        .pipeline { display: flex; flex-direction: column; gap: 0; margin: 20px 0; }
+        .pipeline-stage { display: flex; align-items: center; gap: 15px; padding: 15px 20px; background: #fff; border-left: 4px solid #667eea; margin-bottom: 2px; }
+        .pipeline-stage:nth-child(1) { border-left-color: #e94560; border-radius: 8px 8px 0 0; }
+        .pipeline-stage:nth-child(2) { border-left-color: #f39c12; }
+        .pipeline-stage:nth-child(3) { border-left-color: #27ae60; }
+        .pipeline-stage:nth-child(4) { border-left-color: #3498db; }
+        .pipeline-stage:nth-child(5) { border-left-color: #9b59b6; }
+        .pipeline-stage:nth-child(6) { border-left-color: #e67e22; }
+        .pipeline-stage:nth-child(7) { border-left-color: #2ecc71; border-radius: 0 0 8px 8px; }
+        .pipeline-num { background: #1a1a2e; color: #fff; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+        .pipeline-info { flex: 1; }
+        .pipeline-info strong { font-size: 14px; }
+        .pipeline-info small { color: #888; display: block; }
+        .pipeline-tool { background: #f0f0f0; padding: 4px 10px; border-radius: 15px; font-size: 11px; color: #555; }
+
+        /* Badges */
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 15px; font-size: 11px; font-weight: 600; margin: 2px; }
+        .badge-blue { background: #e3f2fd; color: #1565c0; }
+        .badge-green { background: #e8f5e9; color: #2e7d32; }
+        .badge-orange { background: #fff3e0; color: #e65100; }
+        .badge-red { background: #ffebee; color: #c62828; }
+        .badge-purple { background: #f3e5f5; color: #6a1b9a; }
+
+        /* Print Styles */
+        @media print {
+            .sidebar { display: none; }
+            .main { margin-left: 0; padding: 20px; }
+            .flow-box, .arch-box, .card { break-inside: avoid; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .main { margin-left: 0; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR NAVIGATION -->
+<nav class="sidebar">
+    <h2>DEPLOYMENT SYSTEM</h2>
+    <a href="#overview">Project Overview</a>
+    <a href="#architecture">System Architecture</a>
+    <a href="#tools">Tools Required</a>
+    <a href="#folder">Project Structure</a>
+    <a href="#phase1">Phase 1: CI/CD Pipeline</a>
+    <a href="#phase1-github" class="sub">GitHub Actions Setup</a>
+    <a href="#phase1-pipeline" class="sub">Pipeline Stages</a>
+    <a href="#phase2">Phase 2: Application Code</a>
+    <a href="#phase2-model" class="sub">Data Model</a>
+    <a href="#phase2-api" class="sub">REST API Endpoints</a>
+    <a href="#phase3">Phase 3: Automated Testing</a>
+    <a href="#phase3-unit" class="sub">JUnit Unit Tests</a>
+    <a href="#phase3-integration" class="sub">Integration Tests</a>
+    <a href="#phase3-postman" class="sub">Postman API Tests</a>
+    <a href="#phase3-selenium" class="sub">Selenium E2E Tests</a>
+    <a href="#phase4">Phase 4: Containerization</a>
+    <a href="#phase4-docker" class="sub">Docker Setup</a>
+    <a href="#phase4-compose" class="sub">Docker Compose</a>
+    <a href="#phase4-k8s" class="sub">Kubernetes</a>
+    <a href="#phase5">Phase 5: Monitoring</a>
+    <a href="#phase5-prometheus" class="sub">Prometheus</a>
+    <a href="#phase5-grafana" class="sub">Grafana</a>
+    <a href="#phase6">Phase 6: Security (DevSecOps)</a>
+    <a href="#phase6-sonar" class="sub">SonarQube</a>
+    <a href="#phase6-trivy" class="sub">Trivy Scanner</a>
+    <a href="#standards">Standards (ISO/IEEE)</a>
+    <a href="#setup">How to Run</a>
+    <a href="#install">Installation Guide</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+<!-- ============================================ -->
+<!-- SECTION: OVERVIEW -->
+<!-- ============================================ -->
+<section id="overview">
+    <h1>Automated Software Deployment System</h1>
+    <p><strong>with Integrated Testing Pipelines</strong></p>
+    <p>Final Year Project Documentation | 4th Year Computer Science</p>
+
+    <div class="card info">
+        <h4>What This Project Does</h4>
+        <p>This system automatically takes your code from a developer's machine all the way to a live production server. Every time a developer pushes code, the system:</p>
+        <ol style="margin-left: 20px; margin-top: 8px;">
+            <li>Builds the application</li>
+            <li>Runs all automated tests (unit, integration, end-to-end)</li>
+            <li>Scans for security vulnerabilities</li>
+            <li>Packages it into a Docker container</li>
+            <li>Deploys to staging for verification</li>
+            <li>Deploys to production</li>
+            <li>Monitors performance in real-time</li>
+        </ol>
+    </div>
+
+    <h3>Project Objectives</h3>
+    <div class="arch-container">
+        <div class="arch-box phase1">
+            <h4>Modular CI/CD Pipelines</h4>
+            <p style="font-size:12px">Build, test, and deploy automatically using GitHub Actions</p>
+        </div>
+        <div class="arch-box phase2">
+            <h4>Automated Testing</h4>
+            <p style="font-size:12px">JUnit, Selenium, and Postman for multi-level testing</p>
+        </div>
+        <div class="arch-box phase3">
+            <h4>Containerization</h4>
+            <p style="font-size:12px">Docker & Kubernetes for scalable deployment</p>
+        </div>
+        <div class="arch-box phase4">
+            <h4>Monitoring</h4>
+            <p style="font-size:12px">Prometheus & Grafana for real-time feedback</p>
+        </div>
+        <div class="arch-box phase5">
+            <h4>DevSecOps</h4>
+            <p style="font-size:12px">SonarQube & Trivy for secure deployment</p>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: ARCHITECTURE -->
+<!-- ============================================ -->
+<section id="architecture">
+    <h2>System Architecture</h2>
+
+    <h3>High-Level Architecture Diagram</h3>
+    <div class="diagram">
+        <pre style="font-size: 11px; line-height: 1.6;">
+    +------------------+       +-------------------+       +-------------------+
+    |   DEVELOPER      |       |   VERSION CONTROL |       |   CI/CD PIPELINE  |
+    |                  |       |                   |       |                   |
+    |  Write Code      | ----&gt;|   GitHub           | ----&gt;|  GitHub Actions   |
+    |  Write Tests     |  push |   Repository      | trigger                  |
+    |  Local Testing   |       |   main / develop  |       |  Build            |
+    +------------------+       +-------------------+       |  Test             |
+                                                           |  Security Scan    |
+                                                           |  Docker Build     |
+                                                           +--------+----------+
+                                                                    |
+                                                                    | deploy
+                                                                    v
+    +------------------+       +-------------------+       +-------------------+
+    |   MONITORING     |       |   PRODUCTION      |       |   STAGING         |
+    |                  |       |                   |       |                   |
+    |  Prometheus      | &lt;----|   Kubernetes       | &lt;----|   Kubernetes      |
+    |  Grafana         | scrape|   Cluster (Prod)  | after |   Cluster (Stage) |
+    |  Alertmanager    |       |   3 Replicas      | verify|   1 Replica       |
+    +------------------+       +-------------------+       +-------------------+
+        </pre>
+    </div>
+
+    <h3>CI/CD Pipeline Flow</h3>
+    <div class="flow">
+        <div class="flow-box red">Code Push</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box">Build</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box orange">Unit Tests</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box orange">Integration Tests</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box">Security Scan</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box blue">Docker Build</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box green">Deploy Staging</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box green">Deploy Production</div>
+    </div>
+
+    <h3>Application Architecture (3-Layer)</h3>
+    <div class="diagram">
+        <pre style="font-size: 12px;">
+    +-------------------------------------------------------+
+    |                    PRESENTATION LAYER                  |
+    |              REST API Controllers (Spring)             |
+    |   TaskController    HealthController    Swagger UI     |
+    +---------------------------+---------------------------+
+                                |
+    +---------------------------v---------------------------+
+    |                    BUSINESS LAYER                      |
+    |                  Service Classes                       |
+    |              TaskService (Business Logic)              |
+    +---------------------------+---------------------------+
+                                |
+    +---------------------------v---------------------------+
+    |                    DATA LAYER                          |
+    |              JPA Repository (Spring Data)              |
+    |         H2 (Dev)  /  MySQL (Production)                |
+    +-------------------------------------------------------+
+        </pre>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: TOOLS -->
+<!-- ============================================ -->
+<section id="tools">
+    <h2>Tools Required</h2>
+
+    <h3>Development Tools</h3>
+    <table>
+        <tr><th>Tool</th><th>Purpose</th><th>Version</th><th>Install Command / Link</th></tr>
+        <tr><td>JDK 17</td><td>Java Development Kit</td><td>17 LTS</td><td>Download from adoptium.net</td></tr>
+        <tr><td>Apache Maven</td><td>Build & dependency management</td><td>3.9+</td><td>Download from maven.apache.org</td></tr>
+        <tr><td>IntelliJ IDEA</td><td>IDE (Community Edition is free)</td><td>2024+</td><td>Download from jetbrains.com</td></tr>
+        <tr><td>Git</td><td>Version control</td><td>2.40+</td><td>Download from git-scm.com</td></tr>
+        <tr><td>VS Code</td><td>Alternative IDE (lighter)</td><td>Latest</td><td>Download from code.visualstudio.com</td></tr>
+    </table>
+
+    <h3>DevOps Tools</h3>
+    <table>
+        <tr><th>Tool</th><th>Purpose</th><th>Category</th></tr>
+        <tr><td>GitHub Actions</td><td>CI/CD Pipeline (free, cloud-based)</td><td>CI/CD</td></tr>
+        <tr><td>Docker Desktop</td><td>Containerization</td><td>Containers</td></tr>
+        <tr><td>Minikube</td><td>Local Kubernetes cluster</td><td>Orchestration</td></tr>
+        <tr><td>kubectl</td><td>Kubernetes CLI tool</td><td>Orchestration</td></tr>
+    </table>
+
+    <h3>Testing Tools</h3>
+    <table>
+        <tr><th>Tool</th><th>Test Type</th><th>Included In</th></tr>
+        <tr><td>JUnit 5</td><td>Unit Testing</td><td>pom.xml (spring-boot-starter-test)</td></tr>
+        <tr><td>Mockito</td><td>Mocking Framework</td><td>pom.xml (spring-boot-starter-test)</td></tr>
+        <tr><td>Spring MockMvc</td><td>API Testing</td><td>pom.xml (spring-boot-starter-test)</td></tr>
+        <tr><td>Postman / Newman</td><td>API Testing (Manual + CI)</td><td>Separate install</td></tr>
+        <tr><td>Selenium</td><td>End-to-End Browser Testing</td><td>pom.xml</td></tr>
+        <tr><td>JaCoCo</td><td>Code Coverage Reports</td><td>pom.xml plugin</td></tr>
+    </table>
+
+    <h3>Monitoring & Security Tools</h3>
+    <table>
+        <tr><th>Tool</th><th>Purpose</th><th>How It Runs</th></tr>
+        <tr><td>Prometheus</td><td>Metrics collection</td><td>Docker container</td></tr>
+        <tr><td>Grafana</td><td>Dashboard visualization</td><td>Docker container</td></tr>
+        <tr><td>SonarQube</td><td>Static code analysis</td><td>Docker container</td></tr>
+        <tr><td>Trivy</td><td>Docker image vulnerability scan</td><td>CI pipeline</td></tr>
+        <tr><td>OWASP Dependency Check</td><td>Vulnerable dependencies</td><td>Maven plugin in CI</td></tr>
+    </table>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: FOLDER STRUCTURE -->
+<!-- ============================================ -->
+<section id="folder">
+    <h2>Project Folder Structure</h2>
+
+    <div class="file-tree">
+<span class="folder">Automated software/</span>
+├── <span class="config">pom.xml</span>                                    &larr; Maven build config + all dependencies
+├── <span class="config">Dockerfile</span>                                 &larr; Docker container build instructions
+├── <span class="config">docker-compose.yml</span>                         &larr; Multi-container setup (app + DB + monitoring)
+├── <span class="config">sonar-project.properties</span>                   &larr; SonarQube analysis config
+├── <span class="config">.gitignore</span>                                 &larr; Files to exclude from Git
+│
+├── <span class="folder">src/main/java/com/deploymentpipeline/</span>
+│   ├── <span class="file">Application.java</span>                        &larr; Spring Boot main entry point
+│   ├── <span class="folder">model/</span>
+│   │   ├── <span class="file">Task.java</span>                           &larr; Task entity (database table)
+│   │   ├── <span class="file">TaskStatus.java</span>                     &larr; Enum: PENDING, IN_PROGRESS, COMPLETED, CANCELLED
+│   │   └── <span class="file">TaskPriority.java</span>                   &larr; Enum: LOW, MEDIUM, HIGH, CRITICAL
+│   ├── <span class="folder">repository/</span>
+│   │   └── <span class="file">TaskRepository.java</span>                 &larr; Database queries (JPA)
+│   ├── <span class="folder">service/</span>
+│   │   └── <span class="file">TaskService.java</span>                    &larr; Business logic layer
+│   └── <span class="folder">controller/</span>
+│       ├── <span class="file">TaskController.java</span>                 &larr; REST API endpoints
+│       └── <span class="file">HealthController.java</span>               &larr; Health check endpoint
+│
+├── <span class="folder">src/main/resources/</span>
+│   ├── <span class="config">application.properties</span>                &larr; Dev config (H2 database)
+│   └── <span class="config">application-prod.properties</span>           &larr; Production config (MySQL)
+│
+├── <span class="folder">src/test/java/com/deploymentpipeline/</span>
+│   ├── <span class="folder">unit/</span>
+│   │   ├── <span class="file">TaskServiceTest.java</span>                &larr; 9 unit tests for service layer
+│   │   └── <span class="file">TaskControllerTest.java</span>             &larr; 6 unit tests for API layer
+│   ├── <span class="folder">integration/</span>
+│   │   └── <span class="file">TaskIntegrationTest.java</span>            &larr; 4 full integration tests
+│   └── <span class="folder">e2e/</span>
+│       └── <span class="file">SeleniumE2ETest.java</span>                &larr; 3 browser-based E2E tests
+│
+├── <span class="folder">tests/postman/</span>
+│   └── <span class="config">Task_API_Collection.json</span>              &larr; Postman collection (7 API tests)
+│
+├── <span class="folder">k8s/</span>                                       &larr; Kubernetes deployment files
+│   ├── <span class="config">namespace.yaml</span>
+│   ├── <span class="config">configmap.yaml</span>
+│   ├── <span class="config">secret.yaml</span>
+│   ├── <span class="config">mysql-deployment.yaml</span>
+│   └── <span class="config">app-deployment.yaml</span>                   &larr; 3 replicas + auto-scaling
+│
+├── <span class="folder">monitoring/</span>
+│   ├── <span class="config">prometheus.yml</span>                        &larr; Prometheus scrape config
+│   └── <span class="folder">grafana/</span>
+│       └── <span class="config">dashboard.json</span>                    &larr; Pre-built Grafana dashboard
+│
+└── <span class="folder">.github/workflows/</span>
+    └── <span class="config">ci-cd-pipeline.yml</span>                    &larr; 7-stage CI/CD pipeline
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: PHASE 1 - CI/CD -->
+<!-- ============================================ -->
+<section id="phase1">
+    <h2>Phase 1: CI/CD Pipeline Design</h2>
+
+    <div class="card">
+        <h4>What is CI/CD?</h4>
+        <p><strong>CI (Continuous Integration)</strong> = Every code push is automatically built and tested.</p>
+        <p><strong>CD (Continuous Delivery/Deployment)</strong> = Tested code is automatically deployed to servers.</p>
+        <p>Together, they eliminate manual steps between writing code and running it in production.</p>
+    </div>
+
+    <h3 id="phase1-github">GitHub Actions Setup</h3>
+    <p>GitHub Actions is a free CI/CD service built into GitHub. It runs your pipeline in the cloud every time you push code.</p>
+
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <strong>Create a GitHub Repository</strong>
+            <p>Go to github.com &rarr; New Repository &rarr; Name it "automated-deployment-system"</p>
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+            <strong>Push This Project to GitHub</strong>
+<pre>git init
+git add .
+git commit -m "Initial commit - Automated Deployment System"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/automated-deployment-system.git
+git push -u origin main</pre>
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+            <strong>Pipeline Triggers Automatically</strong>
+            <p>The file <span class="inline-code">.github/workflows/ci-cd-pipeline.yml</span> is already created. GitHub reads it and runs the pipeline on every push.</p>
+        </div>
+    </div>
+
+    <h3 id="phase1-pipeline">Pipeline Stages Explained</h3>
+    <div class="pipeline">
+        <div class="pipeline-stage">
+            <div class="pipeline-num">1</div>
+            <div class="pipeline-info">
+                <strong>BUILD</strong>
+                <small>Compiles Java source code and downloads dependencies</small>
+            </div>
+            <span class="pipeline-tool">Maven</span>
+        </div>
+        <div class="pipeline-stage">
+            <div class="pipeline-num">2</div>
+            <div class="pipeline-info">
+                <strong>UNIT TESTS</strong>
+                <small>Runs 15 JUnit tests on individual classes</small>
+            </div>
+            <span class="pipeline-tool">JUnit 5</span>
+        </div>
+        <div class="pipeline-stage">
+            <div class="pipeline-num">3</div>
+            <div class="pipeline-info">
+                <strong>INTEGRATION TESTS</strong>
+                <small>Tests API endpoints with real HTTP requests</small>
+            </div>
+            <span class="pipeline-tool">Spring MockMvc</span>
+        </div>
+        <div class="pipeline-stage">
+            <div class="pipeline-num">4</div>
+            <div class="pipeline-info">
+                <strong>SECURITY SCAN</strong>
+                <small>Checks code quality and dependency vulnerabilities</small>
+            </div>
+            <span class="pipeline-tool">SonarQube + OWASP</span>
+        </div>
+        <div class="pipeline-stage">
+            <div class="pipeline-num">5</div>
+            <div class="pipeline-info">
+                <strong>DOCKER BUILD & PUSH</strong>
+                <small>Creates container image and pushes to Docker Hub</small>
+            </div>
+            <span class="pipeline-tool">Docker + Trivy</span>
+        </div>
+        <div class="pipeline-stage">
+            <div class="pipeline-num">6</div>
+            <div class="pipeline-info">
+                <strong>DEPLOY TO STAGING</strong>
+                <small>Deploys to staging Kubernetes cluster for verification</small>
+            </div>
+            <span class="pipeline-tool">kubectl</span>
+        </div>
+        <div class="pipeline-stage">
+            <div class="pipeline-num">7</div>
+            <div class="pipeline-info">
+                <strong>DEPLOY TO PRODUCTION</strong>
+                <small>After staging approval, deploys to production</small>
+            </div>
+            <span class="pipeline-tool">kubectl</span>
+        </div>
+    </div>
+
+    <div class="diagram">
+        <pre style="font-size: 11px;">
+  Pipeline Execution Flow (Parallel + Sequential):
+
+  ┌─────────┐
+  │  BUILD  │
+  └────┬────┘
+       │
+       ├──────────────────┬──────────────────┐
+       v                  v                  v
+  ┌──────────┐    ┌──────────────┐    ┌────────────┐
+  │  UNIT    │    │ INTEGRATION  │    │  SECURITY  │     (Run in PARALLEL)
+  │  TESTS   │    │   TESTS      │    │   SCAN     │
+  └────┬─────┘    └──────┬───────┘    └─────┬──────┘
+       │                 │                  │
+       └────────────┬────┴──────────────────┘
+                    v
+            ┌──────────────┐
+            │ DOCKER BUILD │
+            │   & PUSH     │
+            └──────┬───────┘
+                   v
+            ┌──────────────┐
+            │   DEPLOY     │
+            │   STAGING    │
+            └──────┬───────┘
+                   v
+            ┌──────────────┐
+            │   DEPLOY     │
+            │  PRODUCTION  │
+            └──────────────┘
+        </pre>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: PHASE 2 - APPLICATION -->
+<!-- ============================================ -->
+<section id="phase2">
+    <h2>Phase 2: Application Code (Spring Boot)</h2>
+
+    <div class="card info">
+        <h4>About the Application</h4>
+        <p>The application is a <strong>Task Manager REST API</strong> — a simple CRUD (Create, Read, Update, Delete) application that manages tasks. It is built with Spring Boot, which is the most popular Java web framework.</p>
+    </div>
+
+    <h3 id="phase2-model">Data Model</h3>
+    <div class="diagram">
+        <pre>
+  ┌─────────────────────────────────────┐
+  │             TASK TABLE              │
+  ├─────────────────────────────────────┤
+  │  id          : BIGINT (Primary Key) │
+  │  title       : VARCHAR(200)         │
+  │  description : VARCHAR(1000)        │
+  │  status      : ENUM                 │
+  │     - PENDING                       │
+  │     - IN_PROGRESS                   │
+  │     - COMPLETED                     │
+  │     - CANCELLED                     │
+  │  priority    : ENUM                 │
+  │     - LOW                           │
+  │     - MEDIUM                        │
+  │     - HIGH                          │
+  │     - CRITICAL                      │
+  │  created_at  : DATETIME             │
+  │  updated_at  : DATETIME             │
+  └─────────────────────────────────────┘
+        </pre>
+    </div>
+
+    <h3 id="phase2-api">REST API Endpoints</h3>
+    <table>
+        <tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Request Body</th></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td>/api/tasks</td><td>Get all tasks</td><td>None</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td>/api/tasks/{id}</td><td>Get task by ID</td><td>None</td></tr>
+        <tr><td><span class="badge badge-blue">POST</span></td><td>/api/tasks</td><td>Create new task</td><td>JSON (title, description, priority)</td></tr>
+        <tr><td><span class="badge badge-orange">PUT</span></td><td>/api/tasks/{id}</td><td>Update task</td><td>JSON (title, description, status, priority)</td></tr>
+        <tr><td><span class="badge badge-red">DELETE</span></td><td>/api/tasks/{id}</td><td>Delete task</td><td>None</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td>/api/tasks/status/{status}</td><td>Filter by status</td><td>None</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td>/api/tasks/priority/{priority}</td><td>Filter by priority</td><td>None</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td>/api/tasks/search?keyword=X</td><td>Search tasks</td><td>None</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td>/api/health</td><td>Health check</td><td>None</td></tr>
+    </table>
+
+    <h4>Example: Create a Task (POST /api/tasks)</h4>
+    <p>Request:</p>
+<pre>{
+    "title": "Deploy Application v1.0",
+    "description": "Deploy the latest version to production",
+    "priority": "HIGH"
+}</pre>
+    <p>Response (201 Created):</p>
+<pre>{
+    "id": 1,
+    "title": "Deploy Application v1.0",
+    "description": "Deploy the latest version to production",
+    "status": "PENDING",
+    "priority": "HIGH",
+    "createdAt": "2026-05-26T10:30:00",
+    "updatedAt": "2026-05-26T10:30:00"
+}</pre>
+
+    <h3>Code Structure Explanation</h3>
+    <div class="diagram">
+        <pre>
+  Request Flow:
+
+  Client (Browser/Postman)
+       │
+       │  HTTP Request (GET /api/tasks)
+       v
+  ┌──────────────────────┐
+  │   TaskController     │  &larr; Receives HTTP requests, validates input
+  │   (REST Layer)       │     Returns HTTP responses (JSON)
+  └──────────┬───────────┘
+             │ calls
+             v
+  ┌──────────────────────┐
+  │   TaskService        │  &larr; Contains business logic
+  │   (Service Layer)    │     Processes data, applies rules
+  └──────────┬───────────┘
+             │ calls
+             v
+  ┌──────────────────────┐
+  │   TaskRepository     │  &larr; Talks to the database
+  │   (Data Layer)       │     JPA auto-generates SQL queries
+  └──────────┬───────────┘
+             │ SQL
+             v
+  ┌──────────────────────┐
+  │   H2 / MySQL         │  &larr; H2 for development (in-memory)
+  │   (Database)         │     MySQL for production
+  └──────────────────────┘
+        </pre>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: PHASE 3 - TESTING -->
+<!-- ============================================ -->
+<section id="phase3">
+    <h2>Phase 3: Automated Testing</h2>
+
+    <div class="diagram">
+        <pre>
+  Testing Pyramid:
+
+              /\
+             /  \          E2E Tests (Selenium)
+            / E2E\         - Tests full user flow in browser
+           /------\        - Slowest, most fragile
+          /        \
+         / Integra- \      Integration Tests
+        /   tion     \     - Tests API endpoints with real DB
+       /--------------\    - Medium speed
+      /                \
+     /   Unit Tests     \  Unit Tests (JUnit + Mockito)
+    /                    \ - Tests individual methods
+   /______________________ \ - Fastest, most reliable
+
+   Total: 22 automated tests
+        </pre>
+    </div>
+
+    <h3 id="phase3-unit">JUnit Unit Tests (15 tests)</h3>
+    <div class="card success">
+        <h4>What are Unit Tests?</h4>
+        <p>Unit tests test <strong>individual methods</strong> in isolation. They use "mock" objects to simulate dependencies (like the database), so they run extremely fast without needing any external services.</p>
+    </div>
+
+    <p><strong>File:</strong> <span class="inline-code">src/test/java/com/deploymentpipeline/unit/TaskServiceTest.java</span></p>
+    <table>
+        <tr><th>#</th><th>Test Name</th><th>What It Verifies</th></tr>
+        <tr><td>1</td><td>getAllTasks_ShouldReturnAllTasks</td><td>Returns a list of all tasks</td></tr>
+        <tr><td>2</td><td>getTaskById_WhenExists_ShouldReturnTask</td><td>Finds task by valid ID</td></tr>
+        <tr><td>3</td><td>getTaskById_WhenNotExists_ShouldReturnEmpty</td><td>Returns empty for invalid ID</td></tr>
+        <tr><td>4</td><td>createTask_ShouldSaveAndReturnTask</td><td>Creates and saves a new task</td></tr>
+        <tr><td>5</td><td>updateTask_WhenExists_ShouldUpdateAndReturn</td><td>Updates existing task fields</td></tr>
+        <tr><td>6</td><td>deleteTask_WhenNotExists_ShouldReturnFalse</td><td>Returns false for missing task</td></tr>
+        <tr><td>7</td><td>deleteTask_WhenExists_ShouldReturnTrue</td><td>Deletes task and returns true</td></tr>
+        <tr><td>8</td><td>getTasksByStatus_ShouldReturnFilteredTasks</td><td>Filters tasks by status</td></tr>
+        <tr><td>9</td><td>searchTasks_ShouldReturnMatchingTasks</td><td>Searches tasks by keyword</td></tr>
+    </table>
+
+    <p><strong>File:</strong> <span class="inline-code">src/test/java/com/deploymentpipeline/unit/TaskControllerTest.java</span></p>
+    <table>
+        <tr><th>#</th><th>Test Name</th><th>What It Verifies</th></tr>
+        <tr><td>10</td><td>getAllTasks_ShouldReturnOkWithTasks</td><td>GET /api/tasks returns 200</td></tr>
+        <tr><td>11</td><td>getTaskById_WhenExists_ShouldReturnOk</td><td>GET /api/tasks/1 returns task</td></tr>
+        <tr><td>12</td><td>getTaskById_WhenNotExists_ShouldReturn404</td><td>GET /api/tasks/99 returns 404</td></tr>
+        <tr><td>13</td><td>createTask_ShouldReturnCreated</td><td>POST /api/tasks returns 201</td></tr>
+        <tr><td>14</td><td>createTask_WithBlankTitle_ShouldReturn400</td><td>Validates required fields</td></tr>
+        <tr><td>15</td><td>deleteTask_WhenNotExists_ShouldReturn404</td><td>DELETE returns 404 if missing</td></tr>
+    </table>
+
+    <h4>How to Run Unit Tests</h4>
+<pre>mvn test -Dtest="com.deploymentpipeline.unit.**"</pre>
+
+    <h3 id="phase3-integration">Integration Tests (4 tests)</h3>
+    <div class="card success">
+        <h4>What are Integration Tests?</h4>
+        <p>Integration tests test the <strong>full API flow</strong> — from HTTP request through controller, service, repository, and database. They use a real (in-memory H2) database.</p>
+    </div>
+
+    <p><strong>File:</strong> <span class="inline-code">src/test/java/com/deploymentpipeline/integration/TaskIntegrationTest.java</span></p>
+    <table>
+        <tr><th>#</th><th>Test Name</th><th>What It Verifies</th></tr>
+        <tr><td>16</td><td>fullCrudLifecycle</td><td>Create &rarr; Read &rarr; Update &rarr; Delete complete flow</td></tr>
+        <tr><td>17</td><td>filterByStatus</td><td>Filter tasks by PENDING/COMPLETED status</td></tr>
+        <tr><td>18</td><td>searchByKeyword</td><td>Search tasks by keyword in title</td></tr>
+        <tr><td>19</td><td>healthCheck</td><td>Verify /api/health returns "UP"</td></tr>
+    </table>
+
+    <h4>How to Run Integration Tests</h4>
+<pre>mvn test -Dtest="com.deploymentpipeline.integration.**"</pre>
+
+    <h3 id="phase3-postman">Postman API Tests (7 tests)</h3>
+    <div class="card info">
+        <h4>What is Postman?</h4>
+        <p>Postman is a tool for testing REST APIs by sending HTTP requests and verifying responses. The collection file can be imported into Postman or run from the command line using <strong>Newman</strong>.</p>
+    </div>
+
+    <p><strong>File:</strong> <span class="inline-code">tests/postman/Task_API_Collection.json</span></p>
+
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <strong>Import into Postman</strong>
+            <p>Open Postman &rarr; Import &rarr; Select <span class="inline-code">Task_API_Collection.json</span></p>
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+            <strong>Run from Command Line (CI/CD)</strong>
+<pre>npm install -g newman
+newman run tests/postman/Task_API_Collection.json</pre>
+        </div>
+    </div>
+
+    <h3 id="phase3-selenium">Selenium E2E Tests (3 tests)</h3>
+    <div class="card info">
+        <h4>What is Selenium?</h4>
+        <p>Selenium opens a real web browser (Chrome) and simulates user actions — clicking buttons, filling forms, navigating pages. It verifies that the UI works correctly.</p>
+    </div>
+
+    <p><strong>File:</strong> <span class="inline-code">src/test/java/com/deploymentpipeline/e2e/SeleniumE2ETest.java</span></p>
+    <table>
+        <tr><th>#</th><th>Test Name</th><th>What It Verifies</th></tr>
+        <tr><td>20</td><td>swaggerUiShouldBeAccessible</td><td>Swagger API documentation page loads</td></tr>
+        <tr><td>21</td><td>h2ConsoleShouldBeAccessible</td><td>H2 database console page loads</td></tr>
+        <tr><td>22</td><td>apiDocsShouldBeAccessible</td><td>OpenAPI JSON endpoint returns data</td></tr>
+    </table>
+
+    <div class="card warning">
+        <h4>Note</h4>
+        <p>Selenium tests are marked <span class="inline-code">@Disabled</span> by default because they require Chrome browser. Remove the annotation when running locally with Chrome installed.</p>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: PHASE 4 - CONTAINERIZATION -->
+<!-- ============================================ -->
+<section id="phase4">
+    <h2>Phase 4: Containerization & Orchestration</h2>
+
+    <h3 id="phase4-docker">Docker Setup</h3>
+    <div class="card info">
+        <h4>What is Docker?</h4>
+        <p>Docker packages your application and ALL its dependencies (Java, libraries, config) into a single portable unit called a <strong>container</strong>. This container runs identically on any machine — your laptop, staging server, or production server.</p>
+    </div>
+
+    <div class="diagram">
+        <pre>
+  Without Docker:                    With Docker:
+
+  "Works on my machine!"            "Works EVERYWHERE!"
+
+  Developer PC                      Developer PC
+  ├── Java 17                       ├── Docker Container
+  ├── MySQL 8.0                     │   ├── Java 17          ┐
+  ├── Maven 3.9                     │   ├── App.jar          │ All packaged
+  ├── App.jar                       │   └── Config           ┘ together
+  └── OS: Windows                   └── OS: Windows
+
+  Server                            Server
+  ├── Java 11  ← WRONG!             ├── Docker Container
+  ├── MySQL 5.7 ← WRONG!            │   ├── Java 17          ┐ Identical
+  ├── No Maven                      │   ├── App.jar          │ to dev
+  └── OS: Linux                     │   └── Config           ┘
+                                    └── OS: Linux
+        </pre>
+    </div>
+
+    <h4>Dockerfile Explained (Multi-Stage Build)</h4>
+<pre># STAGE 1: Build the app using Maven
+FROM maven:3.9-eclipse-temurin-17 AS build     &larr; Start with Maven + JDK image
+WORKDIR /app                                    &larr; Set working directory
+COPY pom.xml .                                  &larr; Copy dependencies file
+RUN mvn dependency:go-offline -B                &larr; Download all dependencies
+COPY src ./src                                  &larr; Copy source code
+RUN mvn clean package -DskipTests -B            &larr; Build the JAR file
+
+# STAGE 2: Run the app (smaller image)
+FROM eclipse-temurin:17-jre-alpine              &larr; Lightweight Java runtime only
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar     &larr; Copy JAR from build stage
+EXPOSE 8080                                     &larr; Open port 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]          &larr; Run the application</pre>
+
+    <h4>Docker Commands</h4>
+<pre># Build the Docker image
+docker build -t automated-deployment-system .
+
+# Run the container
+docker run -p 8080:8080 automated-deployment-system
+
+# Access the app at http://localhost:8080/swagger-ui.html</pre>
+
+    <h3 id="phase4-compose">Docker Compose</h3>
+    <div class="card info">
+        <h4>What is Docker Compose?</h4>
+        <p>Docker Compose runs <strong>multiple containers together</strong>. Our system needs 5 containers running at the same time: the app, MySQL database, Prometheus, Grafana, and SonarQube.</p>
+    </div>
+
+    <div class="diagram">
+        <pre>
+  docker-compose.yml starts 5 containers:
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │                    Docker Network                           │
+  │                                                             │
+  │  ┌──────────┐   ┌──────────┐   ┌────────────┐              │
+  │  │   APP    │   │  MySQL   │   │ Prometheus │              │
+  │  │  :8080   │──&gt;│  :3306   │   │   :9090    │              │
+  │  └──────────┘   └──────────┘   └──────┬─────┘              │
+  │       │                               │                     │
+  │       │  metrics (/actuator/prometheus)│                     │
+  │       └───────────────────────────────&gt;│                     │
+  │                                       │                     │
+  │  ┌──────────┐   ┌──────────────┐      │                     │
+  │  │ Grafana  │──&gt;│  SonarQube   │      │                     │
+  │  │  :3000   │   │    :9000     │      │                     │
+  │  └──────────┘   └──────────────┘      │                     │
+  │       │                               │                     │
+  │       └───────── reads from ──────────┘                     │
+  │                                                             │
+  └─────────────────────────────────────────────────────────────┘
+        </pre>
+    </div>
+
+    <h4>How to Run Everything</h4>
+<pre># Start all 5 containers
+docker-compose up -d
+
+# Check running containers
+docker-compose ps
+
+# View logs
+docker-compose logs -f app
+
+# Stop everything
+docker-compose down</pre>
+
+    <table>
+        <tr><th>Service</th><th>URL</th><th>Purpose</th></tr>
+        <tr><td>Application</td><td>http://localhost:8080</td><td>Your Spring Boot REST API</td></tr>
+        <tr><td>Swagger UI</td><td>http://localhost:8080/swagger-ui.html</td><td>Interactive API documentation</td></tr>
+        <tr><td>Prometheus</td><td>http://localhost:9090</td><td>Metrics dashboard</td></tr>
+        <tr><td>Grafana</td><td>http://localhost:3000</td><td>Visual monitoring (admin/admin)</td></tr>
+        <tr><td>SonarQube</td><td>http://localhost:9000</td><td>Code quality (admin/admin)</td></tr>
+    </table>
+
+    <h3 id="phase4-k8s">Kubernetes Orchestration</h3>
+    <div class="card info">
+        <h4>What is Kubernetes (K8s)?</h4>
+        <p>Kubernetes manages Docker containers at scale. It handles:</p>
+        <ul style="margin-left: 20px;">
+            <li><strong>Auto-scaling:</strong> Creates more containers when traffic increases</li>
+            <li><strong>Self-healing:</strong> Restarts crashed containers automatically</li>
+            <li><strong>Rolling updates:</strong> Deploys new versions with zero downtime</li>
+            <li><strong>Load balancing:</strong> Distributes requests across containers</li>
+        </ul>
+    </div>
+
+    <div class="diagram">
+        <pre>
+  Kubernetes Cluster Architecture:
+
+  ┌──────────────────────────────────────────────────────┐
+  │                 Kubernetes Cluster                    │
+  │                                                      │
+  │  ┌─────────────────────────────────────────────────┐ │
+  │  │           Namespace: deployment-system          │ │
+  │  │                                                 │ │
+  │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐        │ │
+  │  │  │  Pod 1  │  │  Pod 2  │  │  Pod 3  │        │ │
+  │  │  │  App    │  │  App    │  │  App    │        │ │
+  │  │  │ :8080   │  │ :8080   │  │ :8080   │        │ │
+  │  │  └────┬────┘  └────┬────┘  └────┬────┘        │ │
+  │  │       └─────────┬──┴───────────┘               │ │
+  │  │                 v                               │ │
+  │  │        ┌────────────────┐                       │ │
+  │  │        │  App Service   │  (Load Balancer)      │ │
+  │  │        │    Port: 80    │                       │ │
+  │  │        └────────────────┘                       │ │
+  │  │                                                 │ │
+  │  │  ┌─────────┐   ┌───────────┐  ┌─────────────┐ │ │
+  │  │  │  MySQL  │   │ ConfigMap │  │   Secret    │ │ │
+  │  │  │  Pod    │   │ (config)  │  │ (passwords) │ │ │
+  │  │  │ :3306   │   └───────────┘  └─────────────┘ │ │
+  │  │  └─────────┘                                   │ │
+  │  │                                                 │ │
+  │  │  ┌──────────────────────────────┐              │ │
+  │  │  │  HorizontalPodAutoscaler    │              │ │
+  │  │  │  Min: 2  Max: 10  CPU: 70%  │              │ │
+  │  │  └──────────────────────────────┘              │ │
+  │  └─────────────────────────────────────────────────┘ │
+  └──────────────────────────────────────────────────────┘
+        </pre>
+    </div>
+
+    <h4>Kubernetes Files Explained</h4>
+    <table>
+        <tr><th>File</th><th>Purpose</th></tr>
+        <tr><td>namespace.yaml</td><td>Creates isolated environment "deployment-system"</td></tr>
+        <tr><td>configmap.yaml</td><td>Stores non-secret configuration (DB host, port, name)</td></tr>
+        <tr><td>secret.yaml</td><td>Stores sensitive data (DB username, password) - Base64 encoded</td></tr>
+        <tr><td>mysql-deployment.yaml</td><td>MySQL database pod + service + persistent storage</td></tr>
+        <tr><td>app-deployment.yaml</td><td>App with 3 replicas + load balancer + auto-scaling (2-10 pods)</td></tr>
+    </table>
+
+    <h4>How to Deploy to Kubernetes (Minikube)</h4>
+<pre># Start Minikube
+minikube start
+
+# Deploy everything
+kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/configmap.yaml
+kubectl apply -f k8s/secret.yaml
+kubectl apply -f k8s/mysql-deployment.yaml
+kubectl apply -f k8s/app-deployment.yaml
+
+# Check status
+kubectl get pods -n deployment-system
+kubectl get services -n deployment-system
+
+# Access the application
+minikube service app-service -n deployment-system</pre>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: PHASE 5 - MONITORING -->
+<!-- ============================================ -->
+<section id="phase5">
+    <h2>Phase 5: Monitoring & Feedback</h2>
+
+    <h3 id="phase5-prometheus">Prometheus</h3>
+    <div class="card info">
+        <h4>What is Prometheus?</h4>
+        <p>Prometheus is a monitoring tool that <strong>scrapes metrics</strong> from your application every few seconds. It collects data like: how many requests were made, how fast they were, how much memory is used, and if any errors occurred.</p>
+    </div>
+
+    <div class="diagram">
+        <pre>
+  How Prometheus Works:
+
+  Spring Boot App                     Prometheus
+  ┌──────────────────┐               ┌──────────────────┐
+  │                  │   scrape      │                  │
+  │  /actuator/      │ &lt;────────── │  Scrapes every   │
+  │   prometheus     │   every 5s   │  5 seconds       │
+  │                  │              │                  │
+  │  Exposes metrics:│  ──────────&gt; │  Stores in       │
+  │  - request count │   metrics    │  time-series DB  │
+  │  - response time │              │                  │
+  │  - error count   │              │  Query with      │
+  │  - JVM memory    │              │  PromQL          │
+  │  - CPU usage     │              │                  │
+  └──────────────────┘              └──────────────────┘
+        </pre>
+    </div>
+
+    <h4>Metrics Exposed by Our App</h4>
+    <table>
+        <tr><th>Metric</th><th>What It Measures</th></tr>
+        <tr><td>http_server_requests_seconds_count</td><td>Total number of HTTP requests</td></tr>
+        <tr><td>http_server_requests_seconds_sum</td><td>Total response time</td></tr>
+        <tr><td>jvm_memory_used_bytes</td><td>JVM heap memory usage</td></tr>
+        <tr><td>jvm_threads_live_threads</td><td>Number of active threads</td></tr>
+        <tr><td>system_cpu_usage</td><td>System CPU utilization</td></tr>
+        <tr><td>process_uptime_seconds</td><td>How long the app has been running</td></tr>
+    </table>
+
+    <h3 id="phase5-grafana">Grafana Dashboard</h3>
+    <div class="card info">
+        <h4>What is Grafana?</h4>
+        <p>Grafana takes the raw metrics from Prometheus and creates <strong>visual dashboards</strong> — graphs, gauges, and charts. The pre-configured dashboard shows 6 panels.</p>
+    </div>
+
+    <div class="diagram">
+        <pre>
+  ┌─────────────────────────────────────────────────────────────┐
+  │                GRAFANA MONITORING DASHBOARD                 │
+  ├──────────────────────────┬──────────────────────────────────┤
+  │                          │                                  │
+  │   HTTP Request Rate      │   Response Time (95th %ile)      │
+  │   ▄▄▄▄                  │        ▄▄                        │
+  │   █  █  ▄▄              │   ▄▄▄▄█  █                      │
+  │   █  █▄█  █             │   █       █▄▄                    │
+  │   █       █▄▄           │   █          █                   │
+  │   ────────────          │   ────────────                   │
+  │   req/sec               │   milliseconds                   │
+  │                          │                                  │
+  ├──────────────────────────┼──────────────────────────────────┤
+  │                          │                                  │
+  │   JVM Memory Usage       │   Error Rate (5xx)               │
+  │   ┌──────────────┐      │                                  │
+  │   │  ████████    │      │   ▄                              │
+  │   │  ████████    │      │   █  ▄                           │
+  │   │  ████████    │      │   █▄▄█                           │
+  │   │  350MB/512MB │      │   ────────────                   │
+  │   └──────────────┘      │   errors/sec                     │
+  │                          │                                  │
+  ├──────────────────────────┼──────────────────────────────────┤
+  │                          │                                  │
+  │   Active Threads         │   System CPU Usage               │
+  │        ▄▄▄▄              │   ┌──────────────┐              │
+  │   ▄▄▄▄█    █             │   │  ███         │              │
+  │   █        █▄▄▄          │   │  ███         │              │
+  │   ────────────           │   │  35%         │              │
+  │   thread count           │   └──────────────┘              │
+  │                          │                                  │
+  └──────────────────────────┴──────────────────────────────────┘
+        </pre>
+    </div>
+
+    <h4>Setting Up Grafana</h4>
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <strong>Start services:</strong> <span class="inline-code">docker-compose up -d</span>
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+            <strong>Open Grafana:</strong> http://localhost:3000 (login: admin / admin)
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+            <strong>Add Data Source:</strong> Configuration &rarr; Data Sources &rarr; Add Prometheus &rarr; URL: http://prometheus:9090
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+            <strong>Import Dashboard:</strong> + &rarr; Import &rarr; Upload <span class="inline-code">monitoring/grafana/dashboard.json</span>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: PHASE 6 - SECURITY -->
+<!-- ============================================ -->
+<section id="phase6">
+    <h2>Phase 6: Security (DevSecOps)</h2>
+
+    <div class="card">
+        <h4>What is DevSecOps?</h4>
+        <p>DevSecOps = Development + Security + Operations. It means security checks are <strong>automated into the pipeline</strong>, not done manually after deployment. Security is "shifted left" — caught early in the development process.</p>
+    </div>
+
+    <div class="diagram">
+        <pre>
+  DevSecOps in Our Pipeline:
+
+  Code Written ─&gt; OWASP Check ─&gt; SonarQube Scan ─&gt; Docker Build ─&gt; Trivy Scan ─&gt; Deploy
+                  │                │                                │
+                  │                │                                │
+                  v                v                                v
+            Checks for        Checks for                    Checks Docker
+            vulnerable        code bugs,                    image for known
+            libraries         security                      vulnerabilities
+            (Log4j, etc)      hotspots,                     (CVEs)
+                              code smells
+        </pre>
+    </div>
+
+    <h3 id="phase6-sonar">SonarQube</h3>
+    <div class="card info">
+        <h4>What is SonarQube?</h4>
+        <p>SonarQube is a static code analysis tool. It reads your source code (without running it) and finds: bugs, security vulnerabilities, code smells (bad practices), and duplicate code.</p>
+    </div>
+
+    <h4>Running SonarQube Locally</h4>
+<pre># Start SonarQube (included in docker-compose)
+docker-compose up -d sonarqube
+
+# Wait for it to start (takes ~1 minute)
+# Open http://localhost:9000 (login: admin / admin)
+
+# Run analysis
+mvn sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin -Dsonar.password=admin</pre>
+
+    <h3 id="phase6-trivy">Trivy Container Scanner</h3>
+    <div class="card info">
+        <h4>What is Trivy?</h4>
+        <p>Trivy scans Docker images for known security vulnerabilities (CVEs). It checks the OS packages and application dependencies inside the container.</p>
+    </div>
+<pre># Scan the Docker image
+docker run --rm aquasec/trivy image automated-deployment-system:latest</pre>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: STANDARDS -->
+<!-- ============================================ -->
+<section id="standards">
+    <h2>Standards Incorporated</h2>
+
+    <h3>ISO/IEC 27001 - Information Security Management</h3>
+    <table>
+        <tr><th>ISO 27001 Control</th><th>How We Implement It</th><th>Project Component</th></tr>
+        <tr><td>A.12.6 - Vulnerability Management</td><td>Automated vulnerability scanning</td><td>Trivy, OWASP Dependency Check</td></tr>
+        <tr><td>A.14.2 - Secure Development</td><td>Static code analysis in pipeline</td><td>SonarQube</td></tr>
+        <tr><td>A.12.4 - Logging and Monitoring</td><td>Real-time metrics and dashboards</td><td>Prometheus, Grafana</td></tr>
+        <tr><td>A.9.4 - Access Control</td><td>Secrets management (not hardcoded)</td><td>K8s Secrets, GitHub Secrets</td></tr>
+        <tr><td>A.12.1 - Operational Procedures</td><td>Automated deployment procedures</td><td>CI/CD Pipeline</td></tr>
+        <tr><td>A.14.2.8 - System Security Testing</td><td>Automated testing at multiple levels</td><td>JUnit, Integration, Selenium</td></tr>
+    </table>
+
+    <h3>IEEE 730 - Software Quality Assurance Plans</h3>
+    <table>
+        <tr><th>IEEE 730 Section</th><th>How We Implement It</th><th>Project Component</th></tr>
+        <tr><td>Test Planning</td><td>Organized test hierarchy (unit &rarr; integration &rarr; E2E)</td><td>Testing Pyramid</td></tr>
+        <tr><td>Test Case Design</td><td>Named test cases with clear assertions</td><td>JUnit @DisplayName annotations</td></tr>
+        <tr><td>Test Execution</td><td>Automated test execution on every commit</td><td>GitHub Actions pipeline</td></tr>
+        <tr><td>Code Coverage</td><td>JaCoCo generates coverage reports</td><td>Maven JaCoCo plugin</td></tr>
+        <tr><td>Quality Metrics</td><td>SonarQube quality gates</td><td>SonarQube analysis</td></tr>
+        <tr><td>Configuration Management</td><td>Version control + infrastructure as code</td><td>Git, Docker, K8s YAML</td></tr>
+    </table>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: HOW TO RUN -->
+<!-- ============================================ -->
+<section id="setup">
+    <h2>How to Run the Project</h2>
+
+    <h3>Option 1: Run Locally (Just the App)</h3>
+    <div class="card success">
+        <p>Requires only: <strong>JDK 17 + Maven</strong></p>
+    </div>
+<pre># Build the project
+mvn clean install
+
+# Run the application
+mvn spring-boot:run
+
+# App runs at http://localhost:8080
+# Swagger UI at http://localhost:8080/swagger-ui.html
+# H2 Console at http://localhost:8080/h2-console</pre>
+
+    <h3>Option 2: Run with Docker Compose (Full Stack)</h3>
+    <div class="card success">
+        <p>Requires only: <strong>Docker Desktop</strong></p>
+    </div>
+<pre># Start everything (app + MySQL + Prometheus + Grafana + SonarQube)
+docker-compose up -d
+
+# Check all services are running
+docker-compose ps
+
+# Stop everything
+docker-compose down</pre>
+
+    <h3>Option 3: Deploy to Kubernetes</h3>
+    <div class="card success">
+        <p>Requires: <strong>Docker + Minikube + kubectl</strong></p>
+    </div>
+<pre># Start Minikube
+minikube start
+
+# Build Docker image inside Minikube
+eval $(minikube docker-env)
+docker build -t deploymentpipeline/automated-deployment-system:latest .
+
+# Deploy all Kubernetes resources
+kubectl apply -f k8s/
+
+# Check deployment status
+kubectl get all -n deployment-system
+
+# Get the app URL
+minikube service app-service -n deployment-system --url</pre>
+
+    <h3>Option 4: GitHub Actions (Cloud CI/CD)</h3>
+    <div class="card success">
+        <p>Requires: <strong>GitHub account only</strong></p>
+    </div>
+<pre># Push code to GitHub
+git add .
+git commit -m "Deploy automated deployment system"
+git push origin main
+
+# Go to GitHub &rarr; Actions tab &rarr; Watch pipeline run automatically!</pre>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION: INSTALLATION GUIDE -->
+<!-- ============================================ -->
+<section id="install">
+    <h2>Installation Guide (Step by Step)</h2>
+
+    <h3>Step 1: Install JDK 17</h3>
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <strong>Download</strong> Eclipse Temurin JDK 17 from <span class="inline-code">adoptium.net</span>
+            <p>Select: Windows x64 &rarr; .msi installer &rarr; Run it</p>
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+            <strong>Verify:</strong>
+<pre>java -version
+# Should show: openjdk version "17.x.x"</pre>
+        </div>
+    </div>
+
+    <h3>Step 2: Install Maven</h3>
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <strong>Download</strong> from <span class="inline-code">maven.apache.org/download.cgi</span>
+            <p>Download the Binary zip archive &rarr; Extract to C:\maven</p>
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+            <strong>Add to PATH:</strong> System Properties &rarr; Environment Variables &rarr; PATH &rarr; Add <span class="inline-code">C:\maven\bin</span>
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+            <strong>Verify:</strong>
+<pre>mvn -version
+# Should show: Apache Maven 3.9.x</pre>
+        </div>
+    </div>
+
+    <h3>Step 3: Install Git</h3>
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <strong>Download</strong> from <span class="inline-code">git-scm.com</span> &rarr; Run installer with defaults
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+            <strong>Verify:</strong>
+<pre>git --version
+# Should show: git version 2.x.x</pre>
+        </div>
+    </div>
+
+    <h3>Step 4: Install Docker Desktop</h3>
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <strong>Download</strong> Docker Desktop from <span class="inline-code">docker.com/products/docker-desktop</span>
+            <p>Run installer &rarr; Restart computer &rarr; Open Docker Desktop</p>
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+            <strong>Verify:</strong>
+<pre>docker --version
+docker-compose --version</pre>
+        </div>
+    </div>
+
+    <h3>Step 5: Install Minikube (for Kubernetes)</h3>
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <strong>Download</strong> from <span class="inline-code">minikube.sigs.k8s.io/docs/start/</span>
+            <p>Download Windows installer &rarr; Run it</p>
+        </div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+            <strong>Verify:</strong>
+<pre>minikube version
+kubectl version --client</pre>
+        </div>
+    </div>
+
+    <h3>Step 6: Install Postman</h3>
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <strong>Download</strong> from <span class="inline-code">postman.com/downloads</span>
+            <p>Import the collection: File &rarr; Import &rarr; Select <span class="inline-code">tests/postman/Task_API_Collection.json</span></p>
+        </div>
+    </div>
+
+    <hr style="margin: 40px 0;">
+    <div class="card">
+        <h4>Project Summary</h4>
+        <table>
+            <tr><td><strong>Application</strong></td><td>Java Spring Boot Task Manager REST API</td></tr>
+            <tr><td><strong>Total Automated Tests</strong></td><td>22 (9 unit + 6 controller + 4 integration + 3 E2E)</td></tr>
+            <tr><td><strong>CI/CD Pipeline</strong></td><td>7-stage GitHub Actions pipeline</td></tr>
+            <tr><td><strong>Containerization</strong></td><td>Multi-stage Docker + Docker Compose (5 services)</td></tr>
+            <tr><td><strong>Orchestration</strong></td><td>Kubernetes with auto-scaling (2-10 pods)</td></tr>
+            <tr><td><strong>Monitoring</strong></td><td>Prometheus + Grafana (6-panel dashboard)</td></tr>
+            <tr><td><strong>Security</strong></td><td>SonarQube + Trivy + OWASP Dependency Check</td></tr>
+            <tr><td><strong>Standards</strong></td><td>ISO/IEC 27001, IEEE 730</td></tr>
+        </table>
+    </div>
+</section>
+
+</div>
+
+<script>
+// Highlight active sidebar link on scroll
+document.addEventListener('scroll', function() {
+    const sections = document.querySelectorAll('section[id]');
+    const links = document.querySelectorAll('.sidebar a');
+    let current = '';
+    sections.forEach(section => {
+        const top = section.offsetTop - 100;
+        if (window.scrollY >= top) current = section.getAttribute('id');
+    });
+    links.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+    });
+});
+</script>
+
+</body>
+</html>
