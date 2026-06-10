@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 env:
   DOCKER_IMAGE: deploymentpipeline/automated-deployment-system
   JAVA_VERSION: '17'
@@ -17,6 +22,7 @@ jobs:
   build:
     name: Build Application
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -25,14 +31,14 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
+          distribution: temurin
           cache: maven
 
       - name: Build with Maven
-        run: mvn clean compile -B
+        run: mvn clean compile -U -B
 
       - name: Package Application
-        run: mvn package -DskipTests -B
+        run: mvn package -DskipTests -U -B
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
@@ -47,6 +53,7 @@ jobs:
     name: Unit Tests
     runs-on: ubuntu-latest
     needs: build
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -55,11 +62,11 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
+          distribution: temurin
           cache: maven
 
       - name: Run Unit Tests
-        run: mvn test -Dtest="com.deploymentpipeline.unit.**" -B
+        run: mvn test -Dtest="com.deploymentpipeline.unit.**" -U -B
 
       - name: Generate Test Report
         if: always()
@@ -70,6 +77,7 @@ jobs:
           reporter: java-junit
 
       - name: Upload Code Coverage
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
@@ -82,6 +90,7 @@ jobs:
     name: Integration Tests
     runs-on: ubuntu-latest
     needs: build
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -90,11 +99,11 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
+          distribution: temurin
           cache: maven
 
       - name: Run Integration Tests
-        run: mvn test -Dtest="com.deploymentpipeline.integration.**" -B
+        run: mvn test -Dtest="com.deploymentpipeline.integration.**" -U -B
 
       - name: Generate Test Report
         if: always()
@@ -105,12 +114,13 @@ jobs:
           reporter: java-junit
 
   # ============================================
-  # STAGE 4: SECURITY SCAN (DevSecOps)
+  # STAGE 4: SECURITY SCAN
   # ============================================
   security-scan:
     name: Security Analysis
     runs-on: ubuntu-latest
     needs: build
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -119,12 +129,11 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
+          distribution: temurin
           cache: maven
 
       - name: OWASP Dependency Check
-        run: |
-          mvn org.owasp:dependency-check-maven:check -B || true
+        run: mvn org.owasp:dependency-check-maven:check -B || true
 
       - name: SonarQube Analysis
         if: env.SONAR_TOKEN != ''
@@ -133,9 +142,9 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           mvn sonar:sonar \
-            -Dsonar.projectKey=automated-deployment-system \
-            -Dsonar.host.url=$SONAR_HOST_URL \
-            -Dsonar.login=$SONAR_TOKEN -B
+          -Dsonar.projectKey=automated-deployment-system \
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_TOKEN -B
 
   # ============================================
   # STAGE 5: DOCKER BUILD & PUSH
@@ -144,7 +153,9 @@ jobs:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
     needs: [unit-tests, integration-tests, security-scan]
+
     if: github.ref == 'refs/heads/main'
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -167,12 +178,12 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:latest
             ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
 
-      - name: Scan Docker Image with Trivy
+      - name: Scan Docker Image
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.DOCKER_IMAGE }}:latest
-          format: 'table'
-          severity: 'CRITICAL,HIGH'
+          format: table
+          severity: CRITICAL,HIGH
 
   # ============================================
   # STAGE 6: DEPLOY TO STAGING
@@ -182,19 +193,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: docker-build
     environment: staging
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Deploy to Staging (Kubernetes)
+      - name: Deploy to Staging
         run: |
-          echo "Deploying to Staging Environment..."
-          echo "kubectl apply -f k8s/namespace.yaml"
-          echo "kubectl apply -f k8s/configmap.yaml"
-          echo "kubectl apply -f k8s/secret.yaml"
-          echo "kubectl apply -f k8s/mysql-deployment.yaml"
-          echo "kubectl apply -f k8s/app-deployment.yaml"
-          echo "Staging deployment complete!"
+          echo "Deploying to Staging..."
+          echo "kubectl apply -f k8s/"
+          echo "Staging deployment completed."
 
   # ============================================
   # STAGE 7: DEPLOY TO PRODUCTION
@@ -204,12 +212,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy-staging
     environment: production
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Deploy to Production (Kubernetes)
+      - name: Deploy to Production
         run: |
-          echo "Deploying to Production Environment..."
+          echo "Deploying to Production..."
           echo "kubectl apply -f k8s/ --namespace=production"
-          echo "Production deployment complete!"
+          echo "Production deployment completed."
