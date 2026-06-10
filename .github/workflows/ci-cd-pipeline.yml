@@ -12,7 +12,7 @@ permissions:
   pull-requests: write
 
 env:
-  DOCKER_IMAGE: deploymentpipeline/automated-deployment-system
+  DOCKER_IMAGE: aparna09/automated-deployment-system
   JAVA_VERSION: '17'
 
 jobs:
@@ -142,9 +142,9 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           mvn sonar:sonar \
-          -Dsonar.projectKey=automated-deployment-system \
-          -Dsonar.host.url=$SONAR_HOST_URL \
-          -Dsonar.login=$SONAR_TOKEN -B
+            -Dsonar.projectKey=automated-deployment-system \
+            -Dsonar.host.url=$SONAR_HOST_URL \
+            -Dsonar.login=$SONAR_TOKEN -B
 
   # ============================================
   # STAGE 5: DOCKER BUILD & PUSH
